@@ -1,0 +1,7 @@
+---
+# role: ansible-role-tftpd
+# file: tasks/main.yml
+
+- name: "Check if ansible-role-tftpd is enabled"
+  include_tasks: tasks.yml
+  when: tftpd_role_enabled | bool

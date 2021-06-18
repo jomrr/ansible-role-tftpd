@@ -1,0 +1,8 @@
+
+---
+# role: ansible-role-tftpd
+# file: .ansible-lint
+# comment: using curl to download file via tftp
+# in molecule/resources/playbooks/verify.yml
+skip_list:
+  - command-instead-of-module

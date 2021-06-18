@@ -1,0 +1,66 @@
+---
+# role: ansible-role-tftpd
+# file: molecule/kvm/molecule.yml
+
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+    type: libvirt
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
+platforms:
+  - name: arch-tftpd
+    box: "archlinux/archlinux"
+    memory: 2048
+    cpus: 2
+  - name: centos-tftpd
+    box: "centos/8"
+    memory: 2048
+    cpus: 2
+  - name: debian-tftpd
+    box: "debian/bullseye64"
+    memory: 2048
+    cpus: 2
+  - name: fedora-tftpd
+    box: "fedora/33-cloud-base"
+    memory: 2048
+    cpus: 2
+  - name: opensuse-tftpd
+    box: "generic/opensuse15"
+    memory: 2048
+    cpus: 2
+  - name: oracle-tftpd
+    box: "generic/oracle8"
+    memory: 2048
+    cpus: 2
+  - name: ubuntu-tftpd
+    box: "generic/ubuntu2004"
+    memory: 2048
+    cpus: 2
+provisioner:
+  name: ansible
+  log: true
+  playbooks:
+    prepare: ../resources/playbooks/prepare.yml
+    converge: ../resources/playbooks/converge.yml
+    verify: ../resources/playbooks/verify.yml
+  inventory:
+    group_vars:
+      all:
+        tftpd_role_enabled: true
+verifier:
+  name: testinfra
+  env:
+    PYTHONWARNINGS: "ignore"
+  directory: ../resources/tests
+  options:
+    v: true
+    sudo: true

@@ -1,0 +1,8 @@
+# {{ template_destpath }}
+# vi: ft=conf
+{{ ansible_managed | comment }}
+
+TFTP_USERNAME="tftp"
+TFTP_DIRECTORY="{{ tftpd_root }}"
+TFTP_ADDRESS=":69"
+TFTP_OPTIONS="{{ tftpd_options }}"

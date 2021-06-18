@@ -1,0 +1,15 @@
+# {{ template_destpath }}
+# vi: ft=systemd
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Tftp Server
+Requires=tftp.socket
+Documentation=man:in.tftpd
+
+[Service]
+ExecStart=/usr/sbin/in.tftpd {{ tftpd_options }} {{ tftpd_root }}
+StandardInput=socket
+
+[Install]
+Also=tftp.socket

@@ -1,0 +1,14 @@
+# {{ template_destpath }}
+# vi: ft=conf
+{{ ansible_managed | comment }}
+
+# Path to server files from
+# Depending on your application you may have to change this.
+INTFTPD_PATH="{{ tftpd_root }}"
+
+# For more options, see in.tftpd(8)
+# -R 4096:32767 solves problems with ARC firmware, and obsoletes
+# the /proc/sys/net/ipv4/ip_local_port_range hack.
+# -s causes $INTFTPD_PATH to be the root of the TFTP tree.
+# -l is passed by the init script in addition to these options.
+INTFTPD_OPTS="{{ tftpd_options }} ${INTFTPD_PATH}"

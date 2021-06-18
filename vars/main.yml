@@ -1,0 +1,53 @@
+---
+# role: ansible-role-tftpd
+# file: vars/main.yml
+
+_tftpd_packages:
+  Alpine:
+    - tftp-hpa
+  Archlinux:
+    - tftp-hpa
+  Debian:
+    - tftpd-hpa
+  RedHat:
+    - python3-libsemanage
+    - policycoreutils-python-utils
+    - tftp-server
+  Suse:
+    - system-user-tftp
+    - tftp
+
+# fail here without default on purpose
+tftpd_packages: >-
+  {{    _tftpd_packages[ansible_distribution]
+  if    _tftpd_packages[ansible_distribution] is defined
+  else  _tftpd_packages[ansible_os_family]
+  if    _tftpd_packages[ansible_os_family] is defined }}
+
+_tftpd_conf_path:
+  Alpine: /etc/conf.d/in.tftpd
+  Archlinux: /etc/conf.d/tftpd
+  Debian: /etc/default/tftpd-hpa
+  RedHat: /usr/lib/systemd/system/tftp.service
+  Suse: /etc/sysconfig/tftp
+
+# fail here without default on purpose
+tftpd_conf_path: >-
+  {{    _tftpd_conf_path[ansible_distribution]
+  if    _tftpd_conf_path[ansible_distribution] is defined
+  else  _tftpd_conf_path[ansible_os_family]
+  if    _tftpd_conf_path[ansible_os_family] is defined }}
+
+_tftpd_service:
+  Alpine: in.tftpd
+  Archlinux: tftpd.service
+  Debian: tftpd-hpa
+  RedHat: tftp.service
+  Suse: tftp.socket
+
+# fail here without default on purpose
+tftpd_service: >-
+  {{    _tftpd_service[ansible_distribution]
+  if    _tftpd_service[ansible_distribution] is defined
+  else  _tftpd_service[ansible_os_family]
+  if    _tftpd_service[ansible_os_family] is defined }}
