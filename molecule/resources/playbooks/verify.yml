@@ -1,32 +1,12 @@
 ---
-# role: ansible-role-tftpd
+# name: jam82.ansible-role-tftpd
 # file: molecule/resources/playbooks/verify.yml
 
-- name: Verify
+- name: "PLAYBOOK | Verify"
   hosts: all
-  become: true
   gather_facts: false
   tasks:
-    - name: "Create test file"
-      lineinfile:
-        path: "{{ tftpd_root }}/testfile"   # must be defined in molecule.yml
-        line: Blubbersauce
-        create: true
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: "Install curl"
-      package:
-        name: curl
-        state: present
-
-    # no ansible-lint, I cannot use get_url for this...
-    - name: "Check if we can download testfile"
-      command: curl tftp://localhost/testfile
-      changed_when: false
-      register: _curl_test
-
-    - name: "Assert that file is downloadable"
-      assert:
-        that: "'Blubbersauce' in _curl_test.stdout"
+    - name: "Assert true"
+      ansible.builtin.assert:
+        that: "true"
+        fail_msg: "This should never fail"

@@ -2,8 +2,8 @@
 # role: ansible-role-tftpd
 # file: handlers/main.yml
 
-- name: restart and enable tftpd
-  service:
+- name: Restart and enable tftpd
+  ansible.builtin.service:
     name: "{{ tftpd_service }}"
     enabled: true
     state: restarted

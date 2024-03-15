@@ -1,7 +1,34 @@
 ---
-# role: ansible-role-tftpd
+# name: jam82.tftpd
 # file: tasks/main.yml
 
-- name: "Check if ansible-role-tftpd is enabled"
-  include_tasks: tasks.yml
-  when: tftpd_role_enabled | bool
+- name: "Install packages for tftpd-hpa"
+  ansible.builtin.package:
+    name: "{{ _tftpd_packages }}"
+    state: present
+
+- name: "Ensure tftp root is present"
+  ansible.builtin.file:
+    path: "{{ tftpd_root }}"
+    owner: "{{ tftpd_root_owner }}"
+    group: "{{ tftpd_root_group }}"
+    mode: "{{ tftpd_root_mode }}"
+    state: directory
+
+- name: "Configure tftpd"
+  ansible.builtin.template:
+    src: "{{ ansible_os_family }}/tftpd.j2"
+    dest: "{{ tftpd_conf_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart and enable tftpd
+
+- name: "Set SElinux context for tftpd root"
+  community.general.sefcontext:
+    target: '{{ tftp_root }}(/.*)?'
+    setype: '{{ tftp_setype }}'
+    state: present
+  when: ansible_selinux is defined
+    and ansible_selinux | bool
+    and ansible_selinux.status == 'enabled'

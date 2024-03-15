@@ -1,12 +1,8 @@
 ---
-# role: ansible-role-tftpd
+# name: jam82.ansible-role-tftpd
 # file: molecule/resources/playbooks/converge.yml
 
-- name: Converge
+- name: "PLAYBOOK | Converge"
   hosts: all
-  become: true
-  vars:
-    baseline_role_enabled: false
-    tftpd_role_enabled: true
   roles:
-    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
+    - role: "{{ lookup('ansible.builtin.env', 'MOLECULE_PROJECT_DIRECTORY') }}"

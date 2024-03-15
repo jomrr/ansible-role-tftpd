@@ -1,8 +1,8 @@
 ---
-# role: ansible-role-tftpd
+# name: jam82.tftpd
 # file: vars/main.yml
 
-_tftpd_packages:
+__tftpd_packages:
   Alpine:
     - tftp-hpa
   Archlinux:
@@ -18,13 +18,13 @@ _tftpd_packages:
     - tftp
 
 # fail here without default on purpose
-tftpd_packages: >-
-  {{    _tftpd_packages[ansible_distribution]
-  if    _tftpd_packages[ansible_distribution] is defined
-  else  _tftpd_packages[ansible_os_family]
-  if    _tftpd_packages[ansible_os_family] is defined }}
+_tftpd_packages: >-
+  {{    __tftpd_packages[ansible_distribution]
+  if    __tftpd_packages[ansible_distribution] is defined
+  else  __tftpd_packages[ansible_os_family]
+  if    __tftpd_packages[ansible_os_family] is defined }}
 
-_tftpd_conf_path:
+__tftpd_conf_path:
   Alpine: /etc/conf.d/in.tftpd
   Archlinux: /etc/conf.d/tftpd
   Debian: /etc/default/tftpd-hpa
@@ -32,13 +32,13 @@ _tftpd_conf_path:
   Suse: /etc/sysconfig/tftp
 
 # fail here without default on purpose
-tftpd_conf_path: >-
-  {{    _tftpd_conf_path[ansible_distribution]
-  if    _tftpd_conf_path[ansible_distribution] is defined
-  else  _tftpd_conf_path[ansible_os_family]
-  if    _tftpd_conf_path[ansible_os_family] is defined }}
+_tftpd_conf_path: >-
+  {{    __tftpd_conf_path[ansible_distribution]
+  if    __tftpd_conf_path[ansible_distribution] is defined
+  else  __tftpd_conf_path[ansible_os_family]
+  if    __tftpd_conf_path[ansible_os_family] is defined }}
 
-_tftpd_service:
+__tftpd_service:
   Alpine: in.tftpd
   Archlinux: tftpd.service
   Debian: tftpd-hpa
@@ -46,8 +46,8 @@ _tftpd_service:
   Suse: tftp.socket
 
 # fail here without default on purpose
-tftpd_service: >-
-  {{    _tftpd_service[ansible_distribution]
-  if    _tftpd_service[ansible_distribution] is defined
-  else  _tftpd_service[ansible_os_family]
-  if    _tftpd_service[ansible_os_family] is defined }}
+_tftpd_service: >-
+  {{    __tftpd_service[ansible_distribution]
+  if    __tftpd_service[ansible_distribution] is defined
+  else  __tftpd_service[ansible_os_family]
+  if    __tftpd_service[ansible_os_family] is defined }}
