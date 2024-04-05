@@ -1,14 +1,14 @@
 ---
-# name: jam82.tftpd
+# name: jomrr.tftpd
 # file: meta/main.yml
 
 galaxy_info:
-  namespace: jam82
+  namespace: jomrr
   role_name: tftpd
   author: Jonas Mauer
   company: none
   description: Ansible role for setting up tftpd.
   license: MIT
-  issue_tracker_url: https://github.com/jam82/ansible-role-tftpd/issues
+  issue_tracker_url: https://github.com/jomrr/ansible-role-tftpd/issues
   min_ansible_version: "2.15"
   galaxy_tags: []

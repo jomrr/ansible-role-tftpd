@@ -5,7 +5,7 @@ description = "Ansible role for setting up tftpd."
 authors = ["Jonas Mauer"]
 license = "MIT"
 keywords = []
-repository = "https://github.com/jam82/ansible-role-tftpd"
+repository = "https://github.com/jomrr/ansible-role-tftpd"
 
 [tool.commitizen]
 name = "cz_conventional_commits"

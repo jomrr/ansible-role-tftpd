@@ -1,5 +1,5 @@
 ---
-# name: jam82.tftpd
+# name: jomrr.tftpd
 # file: vars/main.yml
 
 __tftpd_packages:
