@@ -1,5 +1,0 @@
----
-# name: jomrr.tftpd
-# file: meta/requirements.yml
-
-- name: community.general
