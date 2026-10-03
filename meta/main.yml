@@ -1,14 +1,16 @@
 ---
-# name: jomrr.tftpd
+# role: tftpd
 # file: meta/main.yml
 
 galaxy_info:
+  author: Jonas Mauer
+  description: Install and configure the tftp-hpa server.
+  galaxy_tags:
+    - tftp
+    - pxe
+    - networking
+  issue_tracker_url: https://github.com/jomrr/ansible-role-tftpd/issues
+  license: MIT
+  min_ansible_version: "2.20"
   namespace: jomrr
   role_name: tftpd
-  author: Jonas Mauer
-  company: none
-  description: Ansible role for setting up tftpd.
-  license: MIT
-  issue_tracker_url: https://github.com/jomrr/ansible-role-tftpd/issues
-  min_ansible_version: "2.17"
-  galaxy_tags: []

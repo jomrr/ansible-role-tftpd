@@ -1,0 +1,10 @@
+---
+# role: tftpd
+# file: vars/Debian.yml
+
+__tftpd_packages: [tftpd-hpa]
+__tftpd_conf_path: /etc/default/tftpd-hpa
+__tftpd_service: tftpd-hpa.service
+__tftpd_activation: tftpd-hpa.service
+__tftpd_validate_config: /bin/sh -n %s
+__tftpd_config_handlers: [restart tftpd]

@@ -1,0 +1,10 @@
+---
+# role: tftpd
+# file: vars/Suse.yml
+
+__tftpd_packages: [tftp, system-user-tftp]
+__tftpd_conf_path: /etc/sysconfig/tftp
+__tftpd_service: tftp.service
+__tftpd_activation: tftp.socket
+__tftpd_validate_config: "{{ omit }}"
+__tftpd_config_handlers: [restart tftpd]

@@ -1,49 +1,29 @@
 ---
-# name: jomrr.ansible-role-tftpd
+# role: tftpd
 # file: molecule/resources/playbooks/prepare.yml
 
-- name: "PLAYBOOK | Prepare"
+- name: "Molecule | prepare | tftpd"
   hosts: all
-  become: true
   gather_facts: true
   tasks:
-    - name: "Update apk cache and installed packages"
-      community.general.apk:
-        available: true
-        update_cache: true
-        upgrade: true
-      when: ansible_pkg_mgr == "apk"
-
-    - name: "Update apt cache and installed packages"  # noqa: package-latest
+    - name: "TFTPD | Refresh APT package metadata"
+      become: true
+      become_user: root
       ansible.builtin.apt:
-        force_apt_get: true
-        state: latest
         update_cache: true
-      when: ansible_pkg_mgr == "apt"
+      when: ansible_facts.pkg_mgr == 'apt'
 
-    - name: "Update dnf cache and installed packages"  # noqa: package-latest
+    - name: "TFTPD | Refresh DNF package metadata"
+      become: true
+      become_user: root
       ansible.builtin.dnf:
-        name: "*"
-        state: latest
         update_cache: true
-      when: ansible_pkg_mgr == "dnf"
+      when: ansible_facts.pkg_mgr in ['dnf', 'dnf5']
 
-    - name: "Update pacman cache and installed packages"
-      community.general.pacman:
-        update_cache: true
-        upgrade: true
-      when: ansible_pkg_mgr == "pacman"
-
-    - name: "Update yum cache and installed packages"  # noqa: package-latest
-      ansible.builtin.yum:
-        name: "*"
-        state: latest
-        update_cache: true
-      when: ansible_pkg_mgr == "yum"
-
-    - name: "Update zypper cache and installed packages"  # noqa: package-latest
-      community.general.zypper:
-        name: "*"
-        state: latest
-        update_cache: true
-      when: ansible_pkg_mgr == "zypper"
+    - name: "TFTPD | Refresh Zypper package metadata"
+      become: true
+      become_user: root
+      community.general.zypper_repository:
+        repo: '*'
+        runrefresh: true
+      when: ansible_facts.pkg_mgr == 'zypper'

@@ -1,25 +1,21 @@
 ---
-# role: ansible-role-tftpd
+# role: tftpd
 # file: defaults/main.yml
 
-# the tftpd-hpa root directory. we are respecting FHS here...
-# and do not use /tftpboot or other strange stuff.
+# Absolute directory served by the TFTP daemon.
 tftpd_root: /srv/tftp
 
-# owner of the tftpd root directory
-tftpd_root_owner: "root"
+# Owner of the TFTP root directory.
+tftpd_root_owner: root
 
-# group of the tftpd root directory
-tftpd_root_group: "root"
+# Group of the TFTP root directory.
+tftpd_root_group: root
 
-# access mode of the tftpd root directory
+# Permission mode of the TFTP root directory.
 tftpd_root_mode: '0755'
 
-# tftpd-hpa server flags to set
-# Alpine adds "-R 4096:32767" by default.
-# see https://linux.die.net/man/8/in.tftpd for more options
-tftpd_options: "--secure"
+# Additional tftp-hpa daemon options.
+tftpd_options: --secure
 
-# selinux type
-# tftpdir_rw_t for tftp only, see https://linux.die.net/man/8/tftpd_selinux
+# SELinux file type for the TFTP root and its contents.
 tftpd_setype: public_content_t

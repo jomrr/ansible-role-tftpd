@@ -1,0 +1,41 @@
+---
+# role: tftpd
+# file: meta/argument_specs.yml
+
+argument_specs:
+  main:
+    short_description: Configure a TFTP root and keep the server enabled and available.
+    options:
+      tftpd_root:
+        type: path
+        default: /srv/tftp
+        description:
+          - Absolute directory served by tftp-hpa; the filesystem root is not permitted.
+      tftpd_root_owner:
+        type: str
+        default: root
+        description:
+          - Owner of the TFTP root directory.
+      tftpd_root_group:
+        type: str
+        default: root
+        description:
+          - Group of the TFTP root directory.
+      tftpd_root_mode:
+        type: str
+        default: '0755'
+        description:
+          - Quoted permission mode of the TFTP root directory.
+      tftpd_options:
+        type: str
+        default: --secure
+        description:
+          - Command-line options for in.tftpd, in addition to the platform's service arguments.
+          - The default confines requests to tftpd_root; openSUSE also supplies its own
+            secure flag.
+      tftpd_setype:
+        type: str
+        default: public_content_t
+        description:
+          - Persistent SELinux file type for the TFTP root and its contents when SELinux
+            is enabled.

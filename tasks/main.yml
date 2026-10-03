@@ -1,34 +1,85 @@
 ---
-# name: jomrr.tftpd
+# role: tftpd
 # file: tasks/main.yml
 
-- name: "Install packages for tftpd-hpa"
+- name: TFTPD | Load platform settings
+  ansible.builtin.include_vars: "{{ lookup('ansible.builtin.first_found', __tftpd_platform_files) }}"
+  vars:
+    __tftpd_platform_files:
+      files:
+        - "{{ ansible_facts.os_family }}.yml"
+      paths:
+        - "{{ role_path }}/vars"
+
+- name: TFTPD | Validate the served directory
+  ansible.builtin.import_tasks: assert.yml
+
+- name: TFTPD | Install the server and platform dependencies
+  become: true
+  become_user: root
   ansible.builtin.package:
-    name: "{{ _tftpd_packages }}"
+    name: "{{ __tftpd_packages + (['policycoreutils-python-utils'] if ansible_facts.selinux.status == 'enabled' else []) }}"
     state: present
 
-- name: "Ensure tftp root is present"
+- name: TFTPD | Create the TFTP root
+  become: true
+  become_user: root
   ansible.builtin.file:
     path: "{{ tftpd_root }}"
+    state: directory
     owner: "{{ tftpd_root_owner }}"
     group: "{{ tftpd_root_group }}"
     mode: "{{ tftpd_root_mode }}"
-    state: directory
 
-- name: "Configure tftpd"
+- name: TFTPD | Register the persistent SELinux context
+  become: true
+  become_user: root
+  community.general.sefcontext:
+    target: "{{ tftpd_root | ansible.builtin.normpath | regex_escape }}(/.*)?"
+    setype: "{{ tftpd_setype }}"
+    state: present
+  when: ansible_facts.selinux.status == 'enabled'
+
+- name: TFTPD | Apply SELinux contexts to served files
+  become: true
+  become_user: root
+  ansible.builtin.command:
+    argv: [restorecon, -Rv, "{{ tftpd_root }}"]
+  register: __tftpd_restorecon
+  changed_when: __tftpd_restorecon.stdout | length > 0
+  when: ansible_facts.selinux.status == 'enabled'
+
+- name: TFTPD | Create the systemd override directory
+  become: true
+  become_user: root
+  ansible.builtin.file:
+    path: /etc/systemd/system/tftp.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: ansible_facts.os_family == 'RedHat'
+
+- name: TFTPD | Configure the server
+  become: true
+  become_user: root
   ansible.builtin.template:
-    src: "{{ ansible_os_family }}/tftpd.j2"
-    dest: "{{ tftpd_conf_path }}"
+    src: "{{ ansible_facts.os_family }}/tftpd.j2"
+    dest: "{{ __tftpd_conf_path }}"
     owner: root
     group: root
     mode: '0644'
-  notify: Restart and enable tftpd
+    backup: true
+    validate: "{{ __tftpd_validate_config }}"
+  notify: "{{ __tftpd_config_handlers }}"
 
-- name: "Set SElinux context for tftpd root"
-  community.general.sefcontext:
-    target: '{{ tftp_root }}(/.*)?'
-    setype: '{{ tftp_setype }}'
-    state: present
-  when: ansible_selinux is defined
-    and ansible_selinux | bool
-    and ansible_selinux.status == 'enabled'
+- name: TFTPD | Apply configuration before service activation
+  ansible.builtin.meta: flush_handlers
+
+- name: TFTPD | Enable and start service activation
+  become: true
+  become_user: root
+  ansible.builtin.systemd_service:
+    name: "{{ __tftpd_activation }}"
+    enabled: true
+    state: started
