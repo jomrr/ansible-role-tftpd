@@ -156,10 +156,6 @@ changes restart the daemon after any required systemd reload.
 
 ## Operational Notes
 
-- The existing six tftpd_ variables and their defaults are retained by the
-  Factory migration.
-- Supported platforms follow the shared Factory matrix; Alpine and Arch Linux
-  are no longer included.
 - Configuration files are backed up before replacement. Obsolete TFTP roots and
   their content are not removed.
 - tftp-hpa has no configuration-test mode. Debian's shell configuration is
