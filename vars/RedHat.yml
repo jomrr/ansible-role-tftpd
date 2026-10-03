@@ -1,0 +1,10 @@
+---
+# role: tftpd
+# file: vars/RedHat.yml
+
+__tftpd_packages: [tftp-server]
+__tftpd_conf_path: /etc/systemd/system/tftp.service.d/override.conf
+__tftpd_service: tftp.service
+__tftpd_activation: tftp.socket
+__tftpd_validate_config: "{{ omit }}"
+__tftpd_config_handlers: [reload systemd, restart tftpd]

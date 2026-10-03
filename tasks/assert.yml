@@ -1,0 +1,11 @@
+---
+# role: tftpd
+# file: tasks/assert.yml
+
+- name: TFTPD | Require a dedicated absolute TFTP root
+  ansible.builtin.assert:
+    that:
+      - tftpd_root is match('^/')
+      - tftpd_root | ansible.builtin.normpath != '/'
+    quiet: true
+    fail_msg: tftpd_root must be an absolute directory other than the filesystem root.

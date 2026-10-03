@@ -1,12 +1,42 @@
 ---
-# name: jomrr.ansible-role-tftpd
+# role: tftpd
 # file: molecule/resources/playbooks/verify.yml
 
-- name: "PLAYBOOK | Verify"
+- name: TFTPD | Verify the running TFTP server
   hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
-    - name: "Assert true"
-      ansible.builtin.assert:
-        that: "true"
-        fail_msg: "This should never fail"
+    - name: TFTPD | Verify service activation is enabled and running
+      become: true
+      become_user: root
+      ansible.builtin.systemd_service:
+        name: "{{ 'tftpd-hpa.service' if ansible_facts.os_family == 'Debian' else 'tftp.socket' }}"
+        enabled: true
+        state: started
+      check_mode: true
+      register: __tftpd_activation
+      failed_when: __tftpd_activation is changed or __tftpd_activation is failed
+
+    - name: TFTPD | Install the transfer test client
+      become: true
+      become_user: root
+      ansible.builtin.package:
+        name: "{{ 'tftp-hpa' if ansible_facts.os_family == 'Debian' else 'tftp' }}"
+        state: present
+
+    - name: TFTPD | Publish a transfer fixture
+      become: true
+      become_user: root
+      ansible.builtin.copy:
+        dest: /srv/tftp/factory.txt
+        content: "Factory TFTP transfer\n"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: TFTPD | Retrieve the fixture over TFTP
+      ansible.builtin.command:
+        argv: [tftp, -m, binary, '127.0.0.1', -c, get, factory.txt, /dev/stdout]
+      changed_when: false
+      register: __tftpd_transfer
+      failed_when: __tftpd_transfer.rc != 0 or __tftpd_transfer.stdout != 'Factory TFTP transfer'
